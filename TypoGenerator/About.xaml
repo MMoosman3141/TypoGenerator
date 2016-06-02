@@ -1,0 +1,20 @@
+﻿<Window x:Class="TypoGenerator.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TypoGenerator"
+        mc:Ignorable="d"
+        Title="{Binding Version,Mode=OneWay, StringFormat=About Typo Generator - Version: {0}}" Height="500" Width="600" ResizeMode="NoResize" Icon="Resources/TypoGenerator.ico" ShowInTaskbar="False" Topmost="True" WindowStartupLocation="CenterOwner">
+	<Window.Resources>
+		<local:AboutVM x:Key="vm" />
+	</Window.Resources>
+	<Window.DataContext>
+		<StaticResourceExtension ResourceKey="vm" />
+	</Window.DataContext>
+	<Grid>
+		<GroupBox Header="Licenses:">
+			<TabControl ItemsSource="{Binding Licenses}"/>
+		</GroupBox>
+	</Grid>
+</Window>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PatternFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Patterns>
+    <MisspellPattern>
+      <Index>0</Index>
+      <Pattern>ph</Pattern>
+      <MatchType>Anywhere</MatchType>
+      <Replacement>f</Replacement>
+    </MisspellPattern>
+    <MisspellPattern>
+      <Index>1</Index>
+      <Pattern>this</Pattern>
+      <MatchType>FullWord</MatchType>
+      <Replacement>that</Replacement>
+    </MisspellPattern>
+  </Patterns>
+</PatternFile>
