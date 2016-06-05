@@ -153,11 +153,21 @@ namespace TypoGenerator {
 
 		public TypoGeneratorVM() {
 			WordFile = new SpellingFile();
-			if (File.Exists("misspellingPatterns.xml")) {
-				RuleFile = PatternFile.OpenFile("misspellingPatterns.xml");
+
+			string progDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+			progDataFolder = Path.Combine(progDataFolder, "TypoGenerator");
+			string ruleFileName = $@"{progDataFolder}\misspellingPatterns.data";
+
+			if (File.Exists(ruleFileName)) {
+				RuleFile = PatternFile.OpenFile(ruleFileName);
+			} else if (File.Exists("misspellingPatterns.data")) {
+				if (!Directory.Exists(progDataFolder))
+					Directory.CreateDirectory(progDataFolder);
+				File.Copy("misspellingPatterns.data", ruleFileName);
+				RuleFile = PatternFile.OpenFile(ruleFileName);
 			} else {
 				RuleFile = new PatternFile();
-				RuleFile.Filename = "misspellingPatterns.xml";
+				RuleFile.Filename = ruleFileName;
 			}
 
 			NewWordFileCommand = new Command(NewWordFile);

@@ -22,7 +22,7 @@
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 ; Finish page
-!define MUI_FINISHPAGE_RUN "$INSTDIR\TypoGenerator.exe"
+;!define MUI_FINISHPAGE_RUN "$INSTDIR\TypoGenerator.exe"
 !insertmacro MUI_PAGE_FINISH
 
 ; Uninstaller pages
@@ -46,13 +46,21 @@ Section "MainSection" SEC01
   CreateDirectory "$SMPROGRAMS\Typo Generator"
   File "..\TypoGenerator\bin\x64\Release\TypoGenerator.exe"
   File "..\TypoGenerator\bin\x64\Release\NemMvvm.dll"
-  File "..\TypoGenerator\bin\x64\Release\misspellingPatterns.xml"
+  File "..\TypoGenerator\bin\x64\Release\misspellingPatterns.data"
   
   CreateShortCut "$SMPROGRAMS\Typo Generator\Typo Generator.lnk" "$INSTDIR\TypoGenerator.exe"
   CreateShortCut "$DESKTOP\Typo Generator.lnk" "$INSTDIR\TypoGenerator.exe"
 SectionEnd
 
-Section "Licenses" SEC02
+Section "Rules" SEC02
+  ReadEnvStr $0 "ALLUSERPROFILE"
+  SetOutPath "$0\TypoGenerator"
+  SetOverwrite ifnewer
+  File "..\TypoGenerator\bin\x64\Release\misspellingPatterns.data"
+SectionEnd
+
+Section "Licenses" SEC03
+  SetOutPath "$INSTDIR\Licenses"
   SetOverwrite on
   File "..\TypoGenerator\bin\x64\Release\Licenses\aha-soft_License.txt"
 SectionEnd
@@ -92,6 +100,7 @@ Section Uninstall
   Delete "$SMPROGRAMS\Typo Generator\Typo Generator.lnk"
 
   RMDir "$SMPROGRAMS\Typo Generator"
+  RMDir "$INSTDIR\Licenses"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
