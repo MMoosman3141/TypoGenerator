@@ -1,0 +1,97 @@
+﻿<Window x:Name="window" x:Class="TypoGenerator.PatternEditorMV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TypoGenerator"
+				xmlns:converters="clr-namespace:TypoGenerator.Converters"
+        mc:Ignorable="d"
+        Title="Rule Editor" Height="800" Width="600" Icon="Resources/settings.ico" ResizeMode="NoResize" ShowInTaskbar="False" Closing="Window_Closing" Topmost="True">
+	<Window.Resources>
+		<local:PatternEditorVM x:Key="vm" />
+		<converters:IndexConverter x:Key="indexConverter" />
+		<converters:PatternTypeConverter x:Key="patternTypeConverter" />
+	</Window.Resources>
+	<Window.InputBindings>
+		<KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SavePatternFileCommand, Source={StaticResource vm}}" />
+	</Window.InputBindings>
+	<Grid DataContext="{StaticResource vm}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="23"/>
+			<RowDefinition Height="251*"/>
+		</Grid.RowDefinitions>
+		<Menu Background="#FFC2C0C0" VerticalAlignment="Top" Grid.Row="0">
+			<Menu.ItemsPanel>
+				<ItemsPanelTemplate>
+					<DockPanel HorizontalAlignment="Stretch" />
+				</ItemsPanelTemplate>
+			</Menu.ItemsPanel>
+			<MenuItem Header="_File">
+				<MenuItem Header="_Save" Command="{Binding SavePatternFileCommand}">
+					<MenuItem.Icon>
+						<Image Source="Resources/save.ico" />
+					</MenuItem.Icon>
+				</MenuItem>
+				<Separator />
+				<MenuItem Header="E_xit" Command="{Binding ExitScreenCommand}" CommandParameter="{Binding ElementName=window, Mode=OneWay}">
+					<MenuItem.Icon>
+						<Image Source="Resources/close.ico" />
+					</MenuItem.Icon>
+				</MenuItem>
+			</MenuItem>
+		</Menu>
+		<ListView x:Name="listView" Margin="0,0,0,0" Grid.Row="1" ItemsSource="{Binding RuleFile.Patterns}">
+			<ListView.ItemContainerStyle>
+				<Style TargetType="ListViewItem">
+					<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+				</Style>
+			</ListView.ItemContainerStyle>
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Width="NaN">
+						<GridViewColumnHeader >
+							<Button Command="{Binding AddPatternCommand}" MaxWidth="19" MinWidth="19">
+								<Image Source="Resources/plus.ico" />
+							</Button>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<Label Content="{Binding Index, Converter={StaticResource indexConverter}}" ContentStringFormat="{}{0}." MinWidth="35" MaxWidth="35" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Pattern" Width="NaN">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Pattern, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" />
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Match Type" Width="NaN">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<ComboBox ItemsSource="{Binding MatchTypes, Source={StaticResource vm}}" SelectedItem="{Binding MatchType, Converter={StaticResource patternTypeConverter}}" MinWidth="110"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Replacement" Width="NaN">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBox Text="{Binding Replacement, UpdateSourceTrigger=PropertyChanged}" MinWidth="100"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Width="NaN">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<Button Command="{Binding DeletePatternCommand, Source={StaticResource vm}}" CommandParameter="{Binding Index}" Width="23">
+									<Image Source="Resources/erase.ico" />
+								</Button>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+	</Grid>
+</Window>

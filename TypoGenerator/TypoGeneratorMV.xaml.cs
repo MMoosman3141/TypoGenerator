@@ -20,5 +20,18 @@ namespace TypoGenerator {
 		public TypoGeneratorMV() {
 			InitializeComponent();
 		}
-  }
+
+		private void window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+			TypoGeneratorVM vm =(TypoGeneratorVM)Resources["vm"];
+
+			if (vm.WordFile.Changed == true) {
+				MessageBoxResult msgResult = MessageBox.Show("Do you want to save your changes before exiting?", "Save Changes?", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+				if (msgResult == MessageBoxResult.Yes)
+					vm.SaveWordFileCommand.Execute(null);
+				else if (msgResult == MessageBoxResult.Cancel)
+					e.Cancel = true;
+			}
+		}
+	}
 }
