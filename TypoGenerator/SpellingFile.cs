@@ -100,7 +100,7 @@ namespace TypoGenerator {
 
 			XmlSerializer serializer = new XmlSerializer(typeof(SpellingFile));
 
-			using (StreamWriter streamWriter = new StreamWriter(filename)) {			
+			using (StreamWriter streamWriter = new StreamWriter(filename)) {
 				serializer.Serialize(streamWriter, spellingFile);
 			}
 
