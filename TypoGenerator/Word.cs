@@ -16,7 +16,7 @@ namespace TypoGenerator {
 		private string _properWord;
 		private ObservableCollection<string> _misspellings;
 		private ObservableCollection<MisspellPattern> _patterns;
-		private List<string> _usedPatterns;
+		//private List<string> _usedPatterns;
 		private Command _generateMisspellingsCommand;
 		private Command _generateMisspellingCommand;
 		private static Random _rnd = new Random();
@@ -54,14 +54,14 @@ namespace TypoGenerator {
 				SetProperty(ref _patterns, value);
 			}
 		}
-		public List<string> UsedPatterns {
-			get {
-				return _usedPatterns;
-			}
-			set {
-				SetProperty(ref _usedPatterns, value);
-			}
-		}
+		//public List<string> UsedPatterns {
+		//	get {
+		//		return _usedPatterns;
+		//	}
+		//	set {
+		//		SetProperty(ref _usedPatterns, value);
+		//	}
+		//}
 		[XmlIgnore]
 		public Command GenerateMisspellingsCommand {
 			get {
@@ -83,7 +83,7 @@ namespace TypoGenerator {
 
 		public Word() {
 			Misspellings = new ObservableCollection<string>();
-			UsedPatterns = new List<string>();
+			//UsedPatterns = new List<string>();
 
 			GenerateMisspellingsCommand = new Command(GenerateMisspellings, CanGenerateMisspellings);
 			GenerateMisspellingCommand = new Command(GenerateMisspelling);
@@ -103,7 +103,8 @@ namespace TypoGenerator {
 		}
 
 		private void GenerateMisspellings() {
-			UsedPatterns.Clear();
+			//UsedPatterns.Clear();
+			Misspellings.Clear();
 
 			GenerateMisspelling(0);
 			GenerateMisspelling(1);
@@ -115,29 +116,33 @@ namespace TypoGenerator {
 			while (Misspellings.Count - 1 < index) {
 				Misspellings.Add("");
 			}
-			while (UsedPatterns.Count - 1 < index) {
-				UsedPatterns.Add("");
-			}
-			if (index < UsedPatterns.Count)
-				UsedPatterns[index] = "";
 
-			List<MisspellPattern> availablePatterns = Patterns.Where(item => !UsedPatterns.Contains($"{item.Pattern} => {item.Replacement}") && Regex.IsMatch(ProperWord, item.GetRegexPattern())).ToList();
+			List<MisspellPattern> availablePatterns = Patterns.Where(item => Regex.IsMatch(ProperWord, item.GetRegexPattern())).ToList();
 
 			if (availablePatterns.Count == 0) {
 				Misspellings[index] = "{NA}";
 				return;
 			}
 
-			int patternIndex;
-			if (availablePatterns.Count == 1)
-				patternIndex = 0;
-			else
-				patternIndex = _rnd.Next(0, availablePatterns.Count);
+			string misspelling;
+			int tryCount = 0;
+			do {
+				int patternIndex;
+				if (availablePatterns.Count == 1)
+					patternIndex = 0;
+				else
+					patternIndex = _rnd.Next(0, availablePatterns.Count);
 
-			MisspellPattern pattern = availablePatterns[patternIndex];
+				MisspellPattern pattern = availablePatterns[patternIndex];
 
-			UsedPatterns[index] = $"{pattern.Pattern} => {pattern.Replacement}";
-			Misspellings[index] = pattern.GetMisspelling(ProperWord);
+				misspelling = pattern.GetMisspelling(ProperWord) ?? "{NA}";
+				tryCount++;
+			} while ((misspelling == "{NA}" || Misspellings.Contains(misspelling)) && tryCount <= 10);
+
+			if (Misspellings.Contains(misspelling))
+				misspelling = "{NA}";
+
+			Misspellings[index] = misspelling;
 		}
 	}
 }

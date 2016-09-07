@@ -97,24 +97,31 @@ namespace TypoGenerator {
 
 			string misspelling;
 
-			switch (MatchType) {
-				case PatternMatchType.FullWord:
-				case PatternMatchType.WordStart:
-				case PatternMatchType.WordEnd:
-					misspelling = Regex.Replace(word, regexPattern, replace, RegexOptions.IgnoreCase);
-					break;
-				case PatternMatchType.WordMedial:
-				case PatternMatchType.Anywhere:
-				default:
-					Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
+			int tryCount = 0;
+			do {
+				switch (MatchType) {
+					case PatternMatchType.FullWord:
+					case PatternMatchType.WordStart:
+					case PatternMatchType.WordEnd:
+						misspelling = Regex.Replace(word, regexPattern, replace, RegexOptions.IgnoreCase);
+						break;
+					case PatternMatchType.WordMedial:
+					case PatternMatchType.Anywhere:
+					default:
+						Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
 
-					MatchCollection matches = regex.Matches(word);
-					int matchIndex = matches[_rnd.Next(0, matches.Count)].Index;
+						MatchCollection matches = regex.Matches(word);
+						int matchIndex = matches[_rnd.Next(0, matches.Count)].Index;
 
-					misspelling = regex.Replace(word, replace, 1, matchIndex);
+						misspelling = regex.Replace(word, replace, 1, matchIndex);
 
-					break;
-			}
+						break;
+				}
+				tryCount++;
+			} while (misspelling == word && tryCount <= 10);
+
+			if (misspelling == word)
+				return null;
 
 			return misspelling;
 
