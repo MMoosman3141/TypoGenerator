@@ -10,6 +10,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
+using System.Deployment.Application;
 
 namespace TypoGenerator {
 	public class AboutVM : NotifyPropertyChanged {
@@ -23,7 +25,11 @@ namespace TypoGenerator {
 
 		public string Version {
 			get {
-				return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+				if (!Debugger.IsAttached && ApplicationDeployment.IsNetworkDeployed) {
+					return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+				} else {
+					return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+				}
 			}
 		}
 		public ObservableCollection<TabItem> Licenses {
