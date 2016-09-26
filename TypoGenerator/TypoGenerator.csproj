@@ -93,6 +93,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NemMvvm, Version=1.0.6112.37888, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\NemMvvm.1.0.0\lib\net461\NemMvvm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -168,6 +172,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -177,12 +182,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\NemMvvm\NemMvvm\NemMvvm.csproj">
-      <Project>{ffb954b8-61ca-4ff2-b1e2-4ea2cfb2019c}</Project>
-      <Name>NemMvvm</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\down.ico">
@@ -242,6 +241,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Licenses\NemMvvm_License.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="misspellingPatterns.data">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
